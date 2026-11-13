@@ -4,201 +4,400 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Choichu — Small apps for everyday moments</title>
-<meta name="description" content="Choichu (초이츄) is an independent software studio in Korea that builds mini-apps and casual games for everyday life.">
+<meta name="description" content="Choichu (초이츄) is an independent software studio in Bucheon, Korea, building mini-apps in Toss, Android apps, Wear OS watch faces and web services.">
 <meta property="og:title" content="Choichu · 초이츄">
 <meta property="og:description" content="Small apps for everyday moments. 매일 쓰는 작은 앱을 만듭니다.">
+<meta property="og:image" content="https://chainofyoung.github.io/choichu/assets/bucheon-walk.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#fbfaf7; --ink:#14161a; --sub:#5d636e; --line:#e7e4dd; --card:#ffffff;
-  --brand:#ff6b3d; --brand-ink:#ffffff; --soft:#fff1eb;
+  --bg:#fbfaf7; --ink:#14161a; --sub:#5d636e; --muted:#737882; --line:rgba(20,22,26,.09); --card:#ffffff; --raised:#f3f1ec;
+  --brand:#ff6b3d; --brand-text:#d9481a; --brand-ink:#ffffff; --soft:#fff1eb;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --shadow:0 1px 2px rgba(20,22,26,.05);
+  --shadow-up:0 12px 32px rgba(20,22,26,.08);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#111214; --ink:#f1f1f2; --sub:#a1a6b0; --line:#272a30; --card:#18191c;
-    --brand:#ff7d55; --brand-ink:#16100d; --soft:#2a1b15;
+    --bg:#111214; --ink:#f1f1f2; --sub:#a1a6b0; --muted:#878c96; --line:rgba(241,241,242,.08); --card:#18191c; --raised:#202125;
+    --brand:#ff7d55; --brand-text:#ff8a65; --brand-ink:#16100d; --soft:#2a1b15;
+    --shadow:none; --shadow-up:0 12px 32px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#111214; --ink:#f1f1f2; --sub:#a1a6b0; --line:#272a30; --card:#18191c;
-  --brand:#ff7d55; --brand-ink:#16100d; --soft:#2a1b15;
+  --bg:#111214; --ink:#f1f1f2; --sub:#a1a6b0; --muted:#878c96; --line:rgba(241,241,242,.08); --card:#18191c; --raised:#202125;
+  --brand:#ff7d55; --brand-text:#ff8a65; --brand-ink:#16100d; --soft:#2a1b15;
+  --shadow:none; --shadow-up:0 12px 32px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans KR",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans KR",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+img{display:block;max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 .ko{font-family:"Noto Sans KR",Inter,sans-serif;color:var(--sub)}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:6px}
+
+/* scroll progress */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:20;pointer-events:none}
+.progress i{display:block;height:100%;background:var(--brand);transform-origin:0 50%;transform:scaleX(0)}
 
 /* nav */
-nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .2s var(--ease)}
+nav.scrolled{border-bottom-color:var(--line)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;text-decoration:none;letter-spacing:-.02em}
-.mark{width:32px;height:32px;border-radius:10px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-size:18px;font-weight:800}
-nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:15px;font-weight:500}
-nav ul a{text-decoration:none;color:var(--sub)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;text-decoration:none;letter-spacing:-.01em}
+.mark{width:32px;height:32px;border-radius:10px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-size:17px;font-weight:600}
+nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0;font-size:14px;font-weight:500}
+nav ul a{display:block;text-decoration:none;color:var(--sub);padding:6px 12px;border-radius:8px;transition:color .15s var(--ease),background-color .15s var(--ease)}
 nav ul a:hover{color:var(--ink)}
+nav ul a.on{color:var(--ink);background:var(--raised)}
 
 /* hero */
-.hero{padding:96px 0 72px}
-.eyebrow{display:inline-block;background:var(--soft);color:var(--brand);font-weight:600;font-size:13px;padding:6px 12px;border-radius:99px;margin-bottom:22px}
-.hero h1{font-size:clamp(40px,7vw,76px);line-height:1.05;margin:0 0 18px;letter-spacing:-.035em;font-weight:800}
-.hero h1 em{font-style:normal;color:var(--brand)}
-.hero p.lead{font-size:20px;max-width:620px;margin:0 0 6px;color:var(--ink)}
-.hero p.ko{font-size:17px;margin:0 0 32px}
+.hero{padding:80px 0 96px;min-height:calc(100svh - 64px);display:flex;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;width:100%}
+.eyebrow{display:inline-block;background:var(--soft);color:var(--brand-text);font-weight:500;font-size:13px;padding:6px 12px;border-radius:99px;margin-bottom:24px}
+.hero h1{font-size:clamp(40px,6.4vw,72px);line-height:1.04;margin:0 0 20px;letter-spacing:-.03em;font-weight:600}
+.hero h1 em{font-style:normal;color:var(--brand-text)}
+.hero p.lead{font-size:19px;line-height:1.55;max-width:34rem;margin:0 0 8px;color:var(--ink)}
+.hero p.ko{font-size:16px;max-width:34rem;margin:0 0 32px}
 .btns{display:flex;gap:12px;flex-wrap:wrap}
-.btn{display:inline-block;padding:13px 22px;border-radius:12px;font-weight:600;text-decoration:none;font-size:15px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 20px;border-radius:12px;font-weight:500;text-decoration:none;font-size:15px;transition:background-color .15s var(--ease),transform .12s var(--ease)}
+.btn:active{transform:scale(.97)}
 .btn.primary{background:var(--ink);color:var(--bg)}
+.btn.primary:hover{background:color-mix(in srgb,var(--ink) 86%,var(--bg))}
 .btn.ghost{border:1px solid var(--line);background:var(--card)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:64px;max-width:640px}
-.stats div{border-top:2px solid var(--ink);padding-top:12px}
-.stats b{display:block;font-size:30px;letter-spacing:-.02em}
-.stats span{font-size:14px;color:var(--sub)}
+.btn.ghost:hover{background:var(--raised)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;max-width:560px}
+.stats div{border-top:1px solid var(--ink);padding-top:12px}
+.stats b{display:block;font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.2}
+.stats span{font-size:13px;color:var(--sub)}
+
+/* hero visual: moving shelf of real app icons */
+.shelf{position:relative;height:560px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;overflow:hidden;border-radius:28px;background:var(--raised);padding:0 20px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent);
+  transform:perspective(1200px) rotateX(var(--tilt,10deg)) rotateZ(calc(var(--tilt,10deg) * -.4));transition:transform .1s linear}
+.col{display:flex;flex-direction:column;gap:16px;animation:drift 46s linear infinite}
+.col:nth-child(2){animation-direction:reverse;animation-duration:52s}
+.col:nth-child(3){animation-duration:40s}
+.shelf:hover .col{animation-play-state:paused}
+@keyframes drift{from{transform:translateY(0)}to{transform:translateY(calc(-50% - 8px))}}
+.tile{background:var(--card);border-radius:20px;padding:12px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.tile img{width:100%;aspect-ratio:1;border-radius:14px;object-fit:cover;background:var(--soft)}
+.tile span{display:block;font-size:12px;color:var(--sub);margin-top:8px;font-family:"Noto Sans KR",Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* sections */
-section{padding:80px 0;border-top:1px solid var(--line)}
-.shead{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:36px}
-section h2{font-size:36px;margin:0;letter-spacing:-.03em;line-height:1.15}
-section h2 + .ko{margin:6px 0 0}
-.about{display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.about .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px}
-.about h3{margin:0 0 8px;font-size:19px}
+section{padding:112px 0;border-top:1px solid var(--line)}
+.shead{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.kicker{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:12px}
+.kicker b{font-weight:500;color:var(--brand-text);font-variant-numeric:tabular-nums}
+section h2{font-size:40px;margin:0;letter-spacing:-.025em;line-height:1.12;font-weight:600}
+section h2 + .ko{margin:8px 0 0}
+.shead .aside{max-width:26rem;font-size:15px;color:var(--sub);margin:0}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.about h3{margin:0 0 8px;font-size:18px;font-weight:500}
 .about p{margin:0 0 6px}
 
-/* apps */
-.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
-.app{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px}
-.app img{width:56px;height:56px;border-radius:14px;object-fit:cover;background:var(--soft)}
-.app h3{margin:0;font-size:17px}
+/* platform index */
+.platforms{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.pf{display:flex;flex-direction:column;gap:4px;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;transition:border-color .15s var(--ease),transform .2s var(--ease)}
+.pf:hover{border-color:color-mix(in srgb,var(--ink) 22%,transparent);transform:translateY(-2px)}
+.pf b{font-size:44px;font-weight:500;letter-spacing:-.03em;line-height:1.1}
+.pf .t{font-weight:500}
+.pf .ko{font-size:14px}
+.pf svg{margin-top:12px;color:var(--muted)}
+
+/* toss */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.chip{font:inherit;font-size:14px;height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer;transition:background-color .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease)}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{color:inherit;opacity:.6;margin-left:4px;font-variant-numeric:tabular-nums}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.app{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow);transition:opacity .2s var(--ease),transform .25s var(--ease),border-color .15s var(--ease)}
+.app:hover{border-color:color-mix(in srgb,var(--ink) 22%,transparent)}
+.app.out{opacity:0;transform:scale(.97)}
+.app.gone{display:none}
+.app img{width:56px;height:56px;border-radius:14px;object-fit:cover;background:var(--soft);margin-bottom:4px}
+.app h3{margin:0;font-size:16px;font-weight:500;font-family:"Noto Sans KR",Inter,sans-serif}
 .app .en{font-size:14px;color:var(--sub);margin:0}
-.app .tag{align-self:flex-start;font-size:12px;font-weight:600;color:var(--sub);border:1px solid var(--line);border-radius:99px;padding:2px 10px;margin-top:auto}
+.app .tag{align-self:flex-start;font-size:12px;color:var(--muted);margin-top:auto;padding-top:8px}
+.note{display:flex;align-items:center;gap:8px;margin-top:24px;font-size:14px;color:var(--sub)}
+
+/* store */
+.store{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.slot{display:flex;flex-direction:column;border-radius:20px;overflow:hidden;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);min-height:380px}
+.slot .art{aspect-ratio:1;display:grid;place-items:center;background:var(--raised);overflow:hidden}
+.slot .art img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.slot:hover .art img{transform:scale(1.04)}
+.slot .art.watch{background:#16171a}
+.slot .art.watch img{width:78%;height:auto}
+.slot .body{padding:20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.slot h3{margin:0;font-size:17px;font-weight:500}
+.slot p{margin:0;font-size:14px;color:var(--sub)}
+.status{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:12px;color:var(--sub);margin-top:auto;padding-top:12px}
+.status i{width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.slot.empty{background:transparent;border:1px dashed color-mix(in srgb,var(--ink) 18%,transparent);box-shadow:none;align-items:center;justify-content:center;text-align:center;padding:24px;gap:8px}
+.slot.empty .plus{width:44px;height:44px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--ink) 22%,transparent);display:grid;place-items:center;color:var(--muted);margin-bottom:8px}
+.slot.empty b{font-weight:500;font-variant-numeric:tabular-nums}
+
+/* web */
+.feature{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:center;margin-bottom:24px}
+.frame{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:1650/1140;background:#2a2622;clip-path:inset(var(--clip,8%) var(--clip,8%) var(--clip,8%) var(--clip,8%) round 24px)}
+.frame img{width:100%;height:100%;object-fit:cover;transform:scale(var(--zoom,1.14))}
+.frame .live{position:absolute;left:16px;bottom:16px;display:flex;align-items:center;gap:8px;font-size:12px;color:#f1ece4;background:rgba(17,18,20,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 12px;border-radius:8px}
+.feature h3{font-size:32px;font-weight:600;letter-spacing:-.02em;line-height:1.15;margin:0 0 4px;font-family:"Noto Sans KR",Inter,sans-serif}
+.feature .en{font-size:15px;color:var(--muted);margin:0 0 20px}
+.feature p{margin:0 0 12px}
+.facts{list-style:none;padding:0;margin:20px 0 0;border-top:1px solid var(--line)}
+.facts li{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.facts li span:first-child{color:var(--muted)}
+.webs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.web{display:grid;grid-template-columns:160px 1fr;gap:20px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:var(--shadow)}
+.web img{width:160px;height:120px;object-fit:cover;border-radius:12px}
+.web h3{margin:0 0 4px;font-size:17px;font-weight:500;font-family:"Noto Sans KR",Inter,sans-serif}
+.web p{margin:0;font-size:14px;color:var(--sub)}
+.web .status{padding-top:8px}
 
 /* values */
 .values{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .values div{padding:24px;border-radius:20px;background:var(--soft)}
-.values b{display:block;font-size:18px;margin-bottom:6px}
+.values b{display:block;font-size:18px;font-weight:500;margin-bottom:6px}
 .values p{margin:0;font-size:15px}
 
 /* company */
 .info{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card)}
-.info div{padding:18px 22px;border-bottom:1px solid var(--line)}
+.info div{padding:20px 24px;border-bottom:1px solid var(--line)}
 .info div:nth-child(odd){border-right:1px solid var(--line)}
-.info small{display:block;color:var(--sub);font-size:13px}
-.info strong{font-weight:600}
+.info div:nth-last-child(-n+2){border-bottom:none}
+.info small{display:block;color:var(--muted);font-size:13px}
+.info strong{font-weight:500}
 .contact{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--ink);color:var(--bg);border-radius:20px;padding:28px}
-.contact h3{margin:0;font-size:22px}
-.contact a{color:var(--bg);font-weight:600;font-size:18px}
+.contact h3{margin:0;font-size:22px;font-weight:500}
+.contact span{opacity:.8}
 
-footer{padding:40px 0 60px;color:var(--sub);font-size:13px;border-top:1px solid var(--line)}
+footer{padding:40px 0 64px;color:var(--sub);font-size:13px;border-top:1px solid var(--line)}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
 
-@media (max-width:760px){
+/* motion: reveal on scroll */
+.js .rv{opacity:0;transform:translateY(12px);transition:opacity .5s var(--ease),transform .5s var(--ease);transition-delay:calc(var(--i,0) * 50ms)}
+.js .rv.in{opacity:1;transform:none}
+
+@media (max-width:960px){
+  .hero .wrap{grid-template-columns:1fr;gap:48px}
+  .hero{min-height:0;padding:56px 0 72px}
+  .shelf{height:340px;--tilt:0deg!important;transform:none}
+  .store{grid-template-columns:repeat(2,1fr)}
+  .feature{grid-template-columns:1fr;gap:24px}
+  .webs{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
   nav ul{display:none}
-  .hero{padding:64px 0 48px}
-  .about,.values{grid-template-columns:1fr}
+  .hero h1{font-size:40px}
+  .stats{margin-top:40px}
+  .stats b{font-size:22px}
+  .shelf{height:280px;gap:12px;padding:0 12px}
+  .about,.values,.platforms{grid-template-columns:1fr}
   .info{grid-template-columns:1fr}
   .info div:nth-child(odd){border-right:none}
-  section{padding:56px 0}
-  section h2{font-size:28px}
-  .stats b{font-size:24px}
+  .info div:nth-last-child(2){border-bottom:1px solid var(--line)}
+  section{padding:72px 0}
+  section h2{font-size:30px}
+  .store{grid-template-columns:1fr 1fr;gap:12px}
+  .slot{min-height:0}
+  .slot .body{padding:14px}
+  .slot h3{font-size:15px}
+  .slot p{font-size:13px}
+  .web{grid-template-columns:96px 1fr;gap:14px}
+  .web img{width:96px;height:96px}
+  .feature h3{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .col{animation:none}
+  .shelf{transform:none}
+  .js .rv{opacity:1;transform:none;transition:none}
+  .frame{clip-path:none}
+  .frame img{transform:none}
 }
 </style>
 </head>
 <body>
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
 
-<nav>
+<nav id="nav">
   <div class="wrap">
     <a class="logo" href="#top"><span class="mark">C</span>Choichu</a>
     <ul>
       <li><a href="#about">About</a></li>
-      <li><a href="#apps">Apps</a></li>
+      <li><a href="#toss">Apps in Toss</a></li>
+      <li><a href="#store">Store apps</a></li>
+      <li><a href="#web">Web</a></li>
       <li><a href="#company">Company</a></li>
-      <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
 </nav>
 
 <header class="hero" id="top">
   <div class="wrap">
-    <span class="eyebrow">Independent software studio · Korea</span>
-    <h1>Small apps for<br><em>everyday moments.</em></h1>
-    <p class="lead">Choichu designs and builds mini-apps and casual games that people can open in seconds and enjoy every day.</p>
-    <p class="ko">초이츄는 매일 가볍게 열어 보는 작은 앱과 캐주얼 게임을 만드는 1인 소프트웨어 스튜디오입니다.</p>
-    <div class="btns">
-      <a class="btn primary" href="#apps">See our apps</a>
-      <a class="btn ghost" href="#contact">Contact us</a>
+    <div>
+      <span class="eyebrow rv" style="--i:0">Independent software studio · Bucheon, Korea</span>
+      <h1 class="rv" style="--i:1">Small apps for<br><em>everyday moments.</em></h1>
+      <p class="lead rv" style="--i:2">Choichu designs and builds mini-apps, mobile apps and web services that people can open in seconds and enjoy every day.</p>
+      <p class="ko rv" style="--i:3">초이츄는 매일 가볍게 열어 보는 작은 앱과 웹 서비스를 만드는 1인 소프트웨어 스튜디오입니다.</p>
+      <div class="btns rv" style="--i:4">
+        <a class="btn primary" href="#toss">See our apps</a>
+        <a class="btn ghost" href="#company">Company info</a>
+      </div>
+      <div class="stats rv" style="--i:5">
+        <div><b class="num" data-count="10">10</b><span>Mini-apps in Toss</span></div>
+        <div><b class="num" data-count="3">3</b><span>Toss · Android · Web</span></div>
+        <div><b class="num">2026</b><span>Founded in Bucheon</span></div>
+      </div>
     </div>
-    <div class="stats">
-      <div><b>10+</b><span>Live mini-apps</span></div>
-      <div><b>2026</b><span>Founded</span></div>
-      <div><b>KR</b><span>Bucheon, Korea</span></div>
-    </div>
+    <div class="shelf" id="shelf" aria-hidden="true"></div>
   </div>
 </header>
 
 <section id="about">
   <div class="wrap">
-    <div class="shead"><div><h2>About Choichu</h2><p class="ko">회사 소개</p></div></div>
+    <div class="shead rv"><div><div class="kicker"><b>01</b> About</div><h2>About Choichu</h2><p class="ko">회사 소개</p></div></div>
     <div class="about">
-      <div class="card">
+      <div class="card rv" style="--i:0">
         <h3>What we do</h3>
-        <p>We develop application software — lightweight mini-apps for the Toss platform and casual mobile games for Android.</p>
-        <p class="ko">토스 앱 안에서 쓰는 미니앱과 안드로이드 캐주얼 게임을 개발하고 운영합니다.</p>
+        <p>We develop application software: mini-apps for the Toss platform, apps for Android and Wear OS, and web services you can open from any browser.</p>
+        <p class="ko">토스 앱 안의 미니앱, 안드로이드·워치 앱, 브라우저로 바로 여는 웹 서비스를 개발하고 운영합니다.</p>
       </div>
-      <div class="card">
+      <div class="card rv" style="--i:1">
         <h3>How we work</h3>
         <p>From idea and design to development, release and operation, every product is made in-house with a focus on simple, friendly experiences.</p>
         <p class="ko">기획·디자인·개발·출시·운영까지 직접 맡아, 쉽고 친근한 경험을 만드는 데 집중합니다.</p>
       </div>
     </div>
+    <div class="platforms">
+      <a class="pf rv" style="--i:0" href="#toss"><b class="num" data-count="10">10</b><span class="t">Apps in Toss</span><span class="ko">토스 미니앱 · 서비스 중</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
+      <a class="pf rv" style="--i:1" href="#store"><b class="num" data-count="2">2</b><span class="t">Store apps</span><span class="ko">Google Play · 출시 준비 중</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
+      <a class="pf rv" style="--i:2" href="#web"><b class="num" data-count="3">3</b><span class="t">Web services</span><span class="ko">웹 · 메타버스 · 준비 중</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a>
+    </div>
   </div>
 </section>
 
-<section id="apps">
+<section id="toss">
   <div class="wrap">
-    <div class="shead"><div><h2>Our apps</h2><p class="ko">서비스 중인 앱 · Available inside the Toss app</p></div></div>
-    <div class="apps">
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/mcp-images/16223b1c-875e-478f-999c-894d670b7423/0.png" alt="" loading="lazy"><h3>명화 색칠하기</h3><p class="en">Color famous paintings by number.</p><span class="tag">Hobby</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/live-managed-v1-6fa910ef-04da-447d-be2c-0b4c089d7410.png" alt="" loading="lazy"><h3>5초 사자성어</h3><p class="en">Five-second quizzes on Korean idioms.</p><span class="tag">Education</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/live-managed-v1-a384b8d3-8bf7-40fb-8524-263461ddd1fe.png" alt="" loading="lazy"><h3>레트로 사진관</h3><p class="en">Turn photos into vintage prints.</p><span class="tag">Tools</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/mcp-images/f2f240c4-2e73-4d77-a2a7-820bace4cefd/0.png" alt="" loading="lazy"><h3>큰글자로 쇼핑하기</h3><p class="en">Easy, large-type grocery shopping.</p><span class="tag">Shopping</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/live-managed-v1-c2f2f9cd-98c9-4672-9534-b807b608fd53.png" alt="" loading="lazy"><h3>톡방 어워드</h3><p class="en">Fun awards for your group chat.</p><span class="tag">Social</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/67b05290-bfbe-4c35-a5dc-ea176415dc5f.png" alt="" loading="lazy"><h3>공짜타로</h3><p class="en">A daily tarot card reading.</p><span class="tag">Entertainment</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/cf752292-b151-4beb-8c27-08808c0908d0.png" alt="" loading="lazy"><h3>궁합 함 보자</h3><p class="en">A light compatibility test.</p><span class="tag">Entertainment</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/d30f5958-4456-4b89-bf4f-c9514db4bb3b.png" alt="" loading="lazy"><h3>리코더 불기</h3><p class="en">Play the recorder on your phone.</p><span class="tag">Music</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/3ee3975e-e686-46fa-ac08-73eb2b487e52.png" alt="" loading="lazy"><h3>모두의 키캡</h3><p class="en">Satisfying keyboard sounds.</p><span class="tag">Music</span></div>
-      <div class="app"><img src="https://static.toss.im/appsintoss/55541/01dd0885-c1d6-45e6-b798-ba0a2e1939df.png" alt="" loading="lazy"><h3>여름 소리 듣기</h3><p class="en">Relaxing summer ambient sounds.</p><span class="tag">Wellness</span></div>
+    <div class="shead rv">
+      <div><div class="kicker"><b>02</b> Apps in Toss</div><h2>Mini-apps in Toss</h2><p class="ko">앱인토스 · 토스 앱에서 바로 열리는 미니앱</p></div>
+      <p class="aside">No install needed. Search the app name in Toss and it opens right away.</p>
+    </div>
+    <div class="chips rv" id="chips" role="group" aria-label="Filter by category"></div>
+    <div class="apps" id="apps">
+      <div class="app rv" data-cat="Hobby"><img src="https://static.toss.im/appsintoss/55541/mcp-images/16223b1c-875e-478f-999c-894d670b7423/0.png" alt="" loading="lazy"><h3>명화 색칠하기</h3><p class="en">Color famous paintings by number</p><span class="tag">Hobby</span></div>
+      <div class="app rv" data-cat="Education"><img src="https://static.toss.im/appsintoss/55541/live-managed-v1-6fa910ef-04da-447d-be2c-0b4c089d7410.png" alt="" loading="lazy"><h3>5초 사자성어</h3><p class="en">Five-second quizzes on Korean idioms</p><span class="tag">Education</span></div>
+      <div class="app rv" data-cat="Tools"><img src="https://static.toss.im/appsintoss/55541/live-managed-v1-a384b8d3-8bf7-40fb-8524-263461ddd1fe.png" alt="" loading="lazy"><h3>레트로 사진관</h3><p class="en">Turn photos into vintage prints</p><span class="tag">Tools</span></div>
+      <div class="app rv" data-cat="Shopping"><img src="https://static.toss.im/appsintoss/55541/mcp-images/f2f240c4-2e73-4d77-a2a7-820bace4cefd/0.png" alt="" loading="lazy"><h3>큰글자로 쇼핑하기</h3><p class="en">Easy, large-type grocery shopping</p><span class="tag">Shopping</span></div>
+      <div class="app rv" data-cat="Social"><img src="https://static.toss.im/appsintoss/55541/live-managed-v1-c2f2f9cd-98c9-4672-9534-b807b608fd53.png" alt="" loading="lazy"><h3>톡방 어워드</h3><p class="en">Fun awards for your group chat</p><span class="tag">Social</span></div>
+      <div class="app rv" data-cat="Entertainment"><img src="https://static.toss.im/appsintoss/55541/67b05290-bfbe-4c35-a5dc-ea176415dc5f.png" alt="" loading="lazy"><h3>공짜타로</h3><p class="en">A daily tarot card reading</p><span class="tag">Entertainment</span></div>
+      <div class="app rv" data-cat="Entertainment"><img src="https://static.toss.im/appsintoss/55541/cf752292-b151-4beb-8c27-08808c0908d0.png" alt="" loading="lazy"><h3>궁합 함 보자</h3><p class="en">A light compatibility test</p><span class="tag">Entertainment</span></div>
+      <div class="app rv" data-cat="Music"><img src="https://static.toss.im/appsintoss/55541/d30f5958-4456-4b89-bf4f-c9514db4bb3b.png" alt="" loading="lazy"><h3>리코더 불기</h3><p class="en">Play the recorder on your phone</p><span class="tag">Music</span></div>
+      <div class="app rv" data-cat="Music"><img src="https://static.toss.im/appsintoss/55541/3ee3975e-e686-46fa-ac08-73eb2b487e52.png" alt="" loading="lazy"><h3>모두의 키캡</h3><p class="en">Satisfying keyboard sounds</p><span class="tag">Music</span></div>
+      <div class="app rv" data-cat="Wellness"><img src="https://static.toss.im/appsintoss/55541/01dd0885-c1d6-45e6-b798-ba0a2e1939df.png" alt="" loading="lazy"><h3>여름 소리 듣기</h3><p class="en">Relaxing summer ambient sounds</p><span class="tag">Wellness</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="store">
+  <div class="wrap">
+    <div class="shead rv">
+      <div><div class="kicker"><b>03</b> Store apps</div><h2>On Google Play</h2><p class="ko">스토어 앱 · 안드로이드와 Wear OS</p></div>
+      <p class="aside">Our first store apps are getting ready for release. More slots will fill as new apps launch.</p>
+    </div>
+    <div class="store">
+      <article class="slot rv" style="--i:0">
+        <div class="art" style="background:#a9d4c4"><img src="assets/dino-island.webp" alt="공룡 섬 app icon, a pixel brachiosaurus on grass" loading="lazy" style="image-rendering:pixelated"></div>
+        <div class="body"><h3>공룡 섬</h3><p>A voxel dinosaur island for kids aged 4 to 9, with safari drives, eggs to hatch and a photo book</p><span class="status"><i></i>Coming soon · Android</span></div>
+      </article>
+      <article class="slot rv" style="--i:1">
+        <div class="art watch"><img src="assets/ch01-face.webp" alt="CH01 Sport Chrono watch face in black and orange" loading="lazy"></div>
+        <div class="body"><h3>CH01 Sport Chrono</h3><p>A chronograph-style watch face with steps, battery and date at a glance</p><span class="status"><i></i>Coming soon · Wear OS</span></div>
+      </article>
+      <div class="slot empty rv" style="--i:2">
+        <span class="plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        <b>No. 03</b><p class="ko" style="margin:0;font-size:14px">다음 앱을 준비하고 있어요</p>
+      </div>
+      <div class="slot empty rv" style="--i:3">
+        <span class="plus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        <b>No. 04</b><p class="ko" style="margin:0;font-size:14px">다음 앱을 준비하고 있어요</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="web">
+  <div class="wrap">
+    <div class="shead rv">
+      <div><div class="kicker"><b>04</b> Web</div><h2>Web services</h2><p class="ko">웹 서비스 · 설치 없이 링크로 여는 곳</p></div>
+      <p class="aside">Worlds and stories you open from a link, on a phone or a computer.</p>
+    </div>
+    <div class="feature" id="walk">
+      <div class="frame" id="frame"><img src="assets/bucheon-walk.webp" alt="부천 산책: a character with a red balloon standing among parked cars at dusk under fireworks" loading="lazy" width="1600" height="1105"><span class="live">부천 산책 · in-world capture</span></div>
+      <div class="rv">
+        <div class="kicker">Metaverse · 메타버스</div>
+        <h3>부천 산책</h3>
+        <p class="en">Bucheon Walk</p>
+        <p>A 3D Bucheon you can walk through with friends. Share a link, walk the streets together, chat in speech bubbles and keep a walking journal.</p>
+        <p class="ko">부천의 거리를 3D로 옮긴 동네 메타버스입니다. 링크로 들어와 함께 걷고, 말풍선으로 이야기하고, 산책 수첩을 남깁니다.</p>
+        <ul class="facts">
+          <li><span>Sign-up</span><span>Not needed</span></li>
+          <li><span>Together</span><span>Walk, chat, notes, ranking</span></li>
+          <li><span>Status</span><span class="status" style="padding:0"><i></i>Coming soon</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="webs">
+      <article class="web rv" style="--i:0">
+        <img src="assets/sijangtong.webp" alt="A 1960s Seoul market street in black and white" loading="lazy">
+        <div><h3>시장통 점방</h3><p>Saju readings told in the voice of Okbun, a market grandma from 1960s Seoul. For entertainment</p><span class="status"><i></i>Coming soon</span></div>
+      </article>
+      <article class="web rv" style="--i:1">
+        <img src="assets/saebyeok-guksu.webp" alt="A noodle stall lit up in an Euljiro alley before dawn" loading="lazy">
+        <div><h3>새벽국수</h3><p>A short saju reading from Malsun, who runs a dawn noodle stall in Euljiro. For entertainment</p><span class="status"><i></i>Coming soon</span></div>
+      </article>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <div class="shead"><div><h2>What we care about</h2><p class="ko">우리가 지키는 것</p></div></div>
+    <div class="shead rv"><div><div class="kicker"><b>05</b> Values</div><h2>What we care about</h2><p class="ko">우리가 지키는 것</p></div></div>
     <div class="values">
-      <div><b>Simple</b><p>Useful in the first ten seconds. 열자마자 바로 쓸 수 있게.</p></div>
-      <div><b>Friendly</b><p>Large type and clear words for everyone. 누구나 읽기 쉽게.</p></div>
-      <div><b>Respectful</b><p>We collect only what is needed. 꼭 필요한 정보만.</p></div>
+      <div class="rv" style="--i:0"><b>Simple</b><p>Useful in the first ten seconds. 열자마자 바로 쓸 수 있게</p></div>
+      <div class="rv" style="--i:1"><b>Friendly</b><p>Large type and clear words for everyone. 누구나 읽기 쉽게</p></div>
+      <div class="rv" style="--i:2"><b>Respectful</b><p>We collect only what is needed. 꼭 필요한 정보만</p></div>
     </div>
   </div>
 </section>
 
 <section id="company">
   <div class="wrap">
-    <div class="shead"><div><h2>Company information</h2><p class="ko">사업자 정보</p></div></div>
-    <div class="info">
+    <div class="shead rv"><div><div class="kicker"><b>06</b> Company</div><h2>Company information</h2><p class="ko">사업자 정보</p></div></div>
+    <div class="info rv">
       <div><small>Company name · 상호</small><strong>Choichu (초이츄)</strong></div>
       <div><small>Representative · 대표자</small><strong>최인영</strong></div>
-      <div><small>Business registration no. · 사업자등록번호</small><strong>745-15-02575</strong></div>
+      <div><small>Business registration no. · 사업자등록번호</small><strong class="num">745-15-02575</strong></div>
       <div><small>Business type · 업종</small><strong>Application software development and supply</strong></div>
       <div><small>Established · 개업일</small><strong>July 13, 2026</strong></div>
       <div><small>Address · 주소</small><strong>30, Gyeongin-ro 19beon-gil, Sosa-gu, Bucheon-si, Gyeonggi-do, Republic of Korea</strong></div>
     </div>
-    <div class="contact" id="contact">
+    <div class="contact rv" id="contact">
       <div><h3>Get in touch</h3><span>Partnerships, support and inquiries · 문의</span></div>
-      <span id="mail" style="font-weight:600">Please use the support menu in each app · 각 앱의 「문의하기」</span>
+      <span style="font-weight:500;opacity:1">Please use the support menu in each app · 각 앱의 「문의하기」</span>
     </div>
   </div>
 </section>
@@ -206,9 +405,94 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <footer>
   <div class="wrap">
     <span>© 2026 Choichu. All rights reserved.</span>
-    <span>초이츄 · 대표 최인영 · 사업자등록번호 745-15-02575</span>
+    <span>초이츄 · 대표 최인영 · 사업자등록번호 745-15-02575 · <a href="privacy/">Privacy</a></span>
   </div>
 </footer>
 
+<script>
+(() => {
+  const root = document.documentElement;
+  root.classList.add('js');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // hero shelf: three drifting columns built from the real app icons
+  const icons = [...document.querySelectorAll('#apps .app')].map(a => ({src: a.querySelector('img').src, name: a.querySelector('h3').textContent}));
+  icons.push({src: 'assets/dino-island.webp', name: '공룡 섬'}, {src: 'assets/ch01-icon.webp', name: 'CH01 Sport Chrono'});
+  const shelf = document.getElementById('shelf');
+  for (let c = 0; c < 3; c++) {
+    const col = document.createElement('div');
+    col.className = 'col';
+    const set = icons.filter((_, i) => i % 3 === c);
+    const html = set.map(t => `<div class="tile"><img src="${t.src}" alt="" loading="eager"><span>${t.name}</span></div>`).join('');
+    col.innerHTML = html + html;
+    if (c === 1) col.style.marginTop = '-64px';
+    shelf.appendChild(col);
+  }
+
+  // reveal on scroll
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), {rootMargin: '0px 0px -8% 0px', threshold: .08});
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  // stagger the app grid by column position
+  document.querySelectorAll('#apps .app').forEach((el, i) => el.style.setProperty('--i', i % 5));
+
+  // count-up numbers
+  const countIo = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    countIo.unobserve(e.target);
+    const el = e.target, to = +el.dataset.count;
+    if (reduce) return;
+    const t0 = performance.now(), dur = 900;
+    const tick = t => { const p = Math.min(1, (t - t0) / dur); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
+    el.textContent = 0; requestAnimationFrame(tick);
+  }), {threshold: .6});
+  document.querySelectorAll('[data-count]').forEach(el => countIo.observe(el));
+
+  // category chips for the Toss grid
+  const apps = [...document.querySelectorAll('#apps .app')];
+  const cats = ['All', ...new Set(apps.map(a => a.dataset.cat))];
+  const chips = document.getElementById('chips');
+  chips.innerHTML = cats.map((c, i) => {
+    const n = c === 'All' ? apps.length : apps.filter(a => a.dataset.cat === c).length;
+    return `<button class="chip" type="button" aria-pressed="${i === 0}" data-cat="${c}">${c}<span class="n">${n}</span></button>`;
+  }).join('');
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    chips.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b));
+    const cat = b.dataset.cat;
+    apps.forEach(a => {
+      const show = cat === 'All' || a.dataset.cat === cat;
+      if (show) { a.classList.remove('gone'); requestAnimationFrame(() => requestAnimationFrame(() => a.classList.remove('out'))); }
+      else { a.classList.add('out'); setTimeout(() => a.classList.contains('out') && a.classList.add('gone'), reduce ? 0 : 200); }
+    });
+  });
+
+  // scroll-linked: progress bar, nav state, shelf tilt, Bucheon frame opening up
+  const bar = document.getElementById('bar'), nav = document.getElementById('nav');
+  const frame = document.getElementById('frame');
+  const links = [...document.querySelectorAll('nav ul a')];
+  const targets = links.map(a => document.querySelector(a.getAttribute('href')));
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const y = scrollY, h = innerHeight, max = document.documentElement.scrollHeight - h;
+    bar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    nav.classList.toggle('scrolled', y > 8);
+    let cur = -1;
+    targets.forEach((t, i) => { if (t && t.getBoundingClientRect().top < h * .35) cur = i; });
+    links.forEach((a, i) => a.classList.toggle('on', i === cur));
+    if (reduce) return;
+    shelf.style.setProperty('--tilt', `${Math.max(0, 10 - y / 40)}deg`);
+    const r = frame.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (h - r.top) / (h * .8)));
+    frame.style.setProperty('--clip', `${(1 - p) * 8}%`);
+    frame.style.setProperty('--zoom', 1 + (1 - p) * .14);
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive: true});
+  addEventListener('resize', update);
+  update();
+})();
+</script>
 </body>
 </html>
