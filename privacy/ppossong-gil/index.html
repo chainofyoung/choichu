@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>뽀송길 개인정보처리방침</title>
+<style>
+  body { margin: 0 auto; max-width: 720px; padding: 32px 20px 64px; font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; line-height: 1.7; color: #191f28; }
+  h1 { font-size: 26px; } h2 { font-size: 19px; margin-top: 36px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; } th, td { border: 1px solid #e5e8eb; padding: 8px 10px; text-align: left; vertical-align: top; } th { background: #f2f4f6; }
+  .sub { color: #6b7684; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>뽀송길 개인정보처리방침</h1>
+<p class="sub">시행일: 2026년 11월 22일 · 대상: 뽀송길 안드로이드 앱(io.github.chainofyoung.ppossonggil)</p>
+
+<p>뽀송길(이하 “앱”)은 회원가입이나 로그인이 없고, 이름·전화번호·이메일 같은 개인정보를 받지 않습니다. 앱이 동작하는 데 필요한 최소한의 정보만 아래와 같이 처리합니다.</p>
+
+<h2>1. 처리하는 정보와 목적</h2>
+<table>
+  <tr><th>정보</th><th>쓰는 곳</th><th>보내는 곳 · 보관</th></tr>
+  <tr><td>정확한 위치(GPS)</td><td>지도에 내 위치 표시, 걷기 안내</td><td>기기 안에서만 씁니다. 서버로 보내거나 저장하지 않습니다.</td></tr>
+  <tr><td>대략적인 위치(약 2km 단위로 뭉갠, 지도에서 보고 있는 동네의 좌표)</td><td>그 동네의 기상청 예보 받기</td><td>앱의 날씨 서버(Cloudflare Workers)로 보냅니다. 요청을 처리한 뒤 저장하지 않습니다.</td></tr>
+  <tr><td>길 상태 제보: 제보한 길의 위치(약 10m 단위), 제보 종류, 「아직 미끄러워요/녹았어요」 확인</td><td>이웃에게 지금 길 상태 알려 주기</td><td>이용자가 「미끄러워요」 등을 눌렀을 때만 앱 서버로 보냅니다. 위치는 이용자가 지도에서 고른 길의 위치이며 기기의 GPS 위치가 아닙니다. 둘레(약 3km) 이용자에게 보이고, <b>12시간이 지나면 자동으로 삭제</b>됩니다.</td></tr>
+  <tr><td>제보 사진</td><td>길 상태를 사진으로 보여 주기</td><td>이용자가 직접 찍거나 고른 사진 한 장만 받습니다(앱은 카메라·사진첩 전체에 접근하지 않습니다). 둘레 이용자에게 보이며 <b>12시간이 지나면 자동으로 삭제</b>됩니다. 「부적절한 사진 신고」가 들어오면 바로 숨깁니다. 얼굴·차량 번호판이 나오지 않게 찍어 주세요.</td></tr>
+  <tr><td>공유 카드 그림(동네 이름과 길 상태 요약)</td><td>「공유하기」로 보낸 링크의 미리보기 그림</td><td>앱 서버에 <b>7일 보관 후 자동으로 삭제</b>됩니다. 개인을 알아볼 수 있는 정보는 들어 있지 않습니다.</td></tr>
+  <tr><td>IP 주소(되돌릴 수 없게 변환한 값)</td><td>제보·사진·공유를 짧은 시간에 너무 많이 보내는 것 막기</td><td>원래 IP 주소는 저장하지 않고 변환한 값만 <b>10분</b> 보관합니다.</td></tr>
+  <tr><td>주소 검색어</td><td>출발지·도착지 주소 찾기</td><td>국토교통부 브이월드(V-World) 검색 API로 보냅니다. 앱 운영자는 검색어를 저장하지 않습니다.</td></tr>
+  <tr><td>최근 검색, 집·회사 위치, 설정</td><td>다음에 다시 쓰기 편하게</td><td>기기 안(앱 저장소)에만 저장합니다. 앱을 지우거나 앱 데이터를 삭제하면 사라집니다.</td></tr>
+  <tr><td>광고 ID, IP 주소, 기기·앱 정보, 광고 노출·클릭 기록</td><td>광고 표시와 측정, 부정 사용 방지</td><td>Google AdMob(Google LLC)이 광고 SDK를 통해 수집·처리합니다.</td></tr>
+  <tr><td>후원 결제</td><td>앱 안 「후원」</td><td>결제는 Google Play가 처리합니다. 앱 운영자는 카드 번호 등 결제 정보를 받지 않습니다.</td></tr>
+</table>
+
+<h2>2. 위치 권한</h2>
+<p>위치 권한은 “내 위치” 버튼을 누르거나 걷기 안내를 시작할 때 요청하며, 앱을 사용하는 동안에만 위치를 읽습니다. 백그라운드에서는 위치를 읽지 않습니다. 권한을 허용하지 않아도 지도와 길찾기는 쓸 수 있고, 기기 설정에서 언제든 권한을 끌 수 있습니다.</p>
+
+<h2>3. 제3자 제공 및 처리 위탁</h2>
+<ul>
+  <li><b>Google AdMob</b> — 광고 제공. Google이 수집하는 정보와 이용 방법은 <a href="https://policies.google.com/technologies/partner-sites">Google의 안내</a>를 참고하세요. 기기의 설정 &gt; Google &gt; 광고에서 광고 ID를 재설정하거나 삭제해 맞춤 광고를 끌 수 있습니다.</li>
+  <li><b>국토교통부 브이월드</b> — 주소 검색.</li>
+  <li><b>OpenFreeMap</b> — 바탕지도(물·공원·길·지명) 조각 제공. 지도를 볼 때 보고 있는 지역의 지도 조각을 요청하며, 이 과정에서 IP 주소가 일시적으로 처리될 수 있습니다.</li>
+  <li><b>Cloudflare</b> — 지도 자료와 날씨 서버 호스팅. 접속 과정에서 IP 주소가 일시적으로 처리될 수 있습니다.</li>
+</ul>
+<p>위 경우 외에는 개인정보를 제3자에게 제공하거나 판매하지 않습니다.</p>
+
+<h2>4. 보관 기간과 삭제</h2>
+<p>회원 가입이 없어 이용자별로 정보를 모으지 않습니다. 서버에 남는 정보는 제보·제보 사진(12시간), 공유 카드 그림(7일), 남용 방지용 변환 IP(10분)뿐이며 기간이 지나면 자동으로 삭제됩니다. 그 전에 지우고 싶은 제보나 사진이 있으면 아래 문의처로 알려 주세요. 기기에 저장된 정보는 앱 삭제 또는 기기 설정의 “저장공간 &gt; 데이터 삭제”로 지울 수 있습니다.</p>
+
+<h2>5. 아동</h2>
+<p>앱은 만 13세 미만 아동을 대상으로 하지 않으며, 아동의 개인정보를 알면서 수집하지 않습니다.</p>
+
+<h2>6. 안전</h2>
+<p>앱과 서버 사이의 통신은 모두 암호화(HTTPS)됩니다.</p>
+
+<h2>7. 문의</h2>
+<p>개인정보 관련 문의: <a href="mailto:choichuuuuu@gmail.com">choichuuuuu@gmail.com</a></p>
+
+<h2>8. 변경</h2>
+<p>이 방침이 바뀌면 이 페이지에 새 시행일과 함께 알립니다.</p>
+</body>
+</html>
